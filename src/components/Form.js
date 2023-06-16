@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux';
-import { addBook } from '../Redux/books/booksSlice';
+import { postNewBooks } from '../Redux/books/fetchBooks';
 
 const Addform = () => {
   const dispatch = useDispatch();
@@ -8,7 +8,11 @@ const Addform = () => {
     e.preventDefault();
     const title = e.target.elements.bookTitle.value;
     const author = e.target.elements.author.value;
-    dispatch(addBook({ title, author }));
+    const category = e.target.elements.category.value;
+    const itemId = Date.now().toString();
+    dispatch(postNewBooks({
+      itemId, title, author, category,
+    }));
   };
   return (
     <>
@@ -16,6 +20,11 @@ const Addform = () => {
       <form onSubmit={addNewBook}>
         <input type="text" name="bookTitle" placeholder="Booktitle" />
         <input type="text" name="author" placeholder="Author" />
+        <select name="category">
+          <option value="Fiction">Fiction</option>
+          <option value="Non-Fiction">Non-Fiction</option>
+
+        </select>
         <button type="submit">Add Book</button>
       </form>
     </>
