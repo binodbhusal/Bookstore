@@ -1,27 +1,44 @@
 import { createSlice } from '@reduxjs/toolkit';
-import Data from '../../components/Data';
+import { postNewBooks, fetchData, removeData } from './fetchBooks';
 
-const initialState = Data;
-
+const initialState = {
+  isLoading: false,
+  data: [],
+  isError: false,
+};
 const booksSlice = createSlice({
   name: 'books',
   initialState,
-  reducers: {
-    addBook: (state, action) => {
-      const { title, author } = action.payload;
-      const newBook = {
-        id: Date.now(),
-        title,
-        author,
-      };
-      state.push(newBook);
-    },
-    removeBook: (state, action) => {
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(postNewBooks.fulfilled, (state, action) => {
+      state.data.push(action.payload);
+      state.isLoading = false;
+    });
+    builder.addCase(postNewBooks.pending, (state) => {
+      state.isLoading = true;
+      state.isError = false;
+    });
+    builder.addCase(fetchData.fulfilled, (state, action) => {
+      state.data = action.payload;
+      state.isLoading = false;
+      state.isError = false;
+    });
+    builder.addCase(fetchData.pending, (state) => {
+      state.isLoading = true;
+      state.isError = false;
+    });
+    builder.addCase(fetchData.rejected, (state) => {
+      state.status = 'Failed';
+      state.isLoading = false;
+      state.isError = true;
+    });
+    builder.addCase(removeData.fulfilled, (state, action) => {
       const bookId = action.payload;
-      return state.filter((book) => book.id !== bookId);
-    },
-
+      state.data = state.data.filter((book) => book.item_id !== bookId);
+    });
   },
+
 });
 export const { addBook, removeBook } = booksSlice.actions;
 export default booksSlice.reducer;
