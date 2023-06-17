@@ -22,7 +22,7 @@ const Addform = () => {
         <input className={styles.bookInput} type="text" name="bookTitle" placeholder="Booktitle" />
         <input className={styles.authorInput} type="text" name="author" placeholder="Author" />
         <select name="category" className={styles.categoryselect}>
-          <option disabled selected>Category</option>
+          <option value="" defaultValue className={styles.categoryselect1} disabled selected hidden>Category</option>
           <option value="Fiction">Fiction</option>
           <option value="Non-Fiction">Non-Fiction</option>
 
